@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public enum KeyColor
 {
     RED,
@@ -10,4 +8,3 @@ public enum KeyColor
     INDIGO,
     VIOLET
 }
-

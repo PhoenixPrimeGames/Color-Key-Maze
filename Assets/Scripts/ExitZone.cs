@@ -2,17 +2,23 @@ using UnityEngine;
 
 public class ExitZone : MonoBehaviour
 {
+    GameObject gameManagerObject;
     private GameManager gameManager;
 
     private void Awake()
     {
-        gameManager = FindFirstObjectByType<GameManager>();
+        gameManagerObject = GameObject.FindGameObjectWithTag("GameManager");
+        if (gameManagerObject == null)
+        {
+            Debug.LogError($"{name} could not find the GameManager.");
+            return;
+        }
+
+        gameManager = gameManagerObject.GetComponent<GameManager>();
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerInteraction player = other.GetComponent<PlayerInteraction>();
-
-        if (player == null) return;
+        if (!other.CompareTag("Player")) return;
 
         gameManager.WinGame();
     }

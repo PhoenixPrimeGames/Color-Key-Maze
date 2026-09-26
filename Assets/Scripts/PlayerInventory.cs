@@ -5,11 +5,19 @@ public class PlayerInventory : MonoBehaviour
 {
 
     private HashSet<KeyColor> collectedKeys = new();
+    public event System.Action<KeyColor> KeyCollected;
+    public event System.Action<KeyColor> KeyConsumed;
 
-    public void CollectKey(KeyColor color)
+    public bool CollectKey(KeyColor color)
     {
-        collectedKeys.Add(color);
-        Debug.Log(color + " picked up? " + CheckKey(color));
+        bool collected = collectedKeys.Add(color);
+
+        if (collected)
+        {
+            KeyCollected?.Invoke(color);
+        }
+
+        return collected;
     }
 
     public bool CheckKey(KeyColor color)
@@ -19,7 +27,14 @@ public class PlayerInventory : MonoBehaviour
 
     public bool ConsumeKey(KeyColor color)
     {
-        return collectedKeys.Remove(color);
+        bool removed = collectedKeys.Remove(color);
+
+        if (removed)
+        {
+            KeyConsumed?.Invoke(color);
+        }
+
+        return removed;
     }
 
 }

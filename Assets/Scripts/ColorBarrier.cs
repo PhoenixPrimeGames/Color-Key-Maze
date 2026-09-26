@@ -6,19 +6,27 @@ using UnityEngine;
 public class ColorBarrier : MonoBehaviour
 {
     [SerializeField] private KeyColor barrierColor;
-    private ColorUnlockManager manager;
+    GameObject gameManagerObject;
+    private ColorUnlockManager colorUnlockManager;
     private BoxCollider2D solidCollider;
     private BarrierInteractionZone interactionZone;
     private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
-        manager = FindFirstObjectByType<ColorUnlockManager>();
+        gameManagerObject = GameObject.FindGameObjectWithTag("GameManager");
+        if (gameManagerObject == null)
+        {
+            Debug.LogError($"{name} could not find the GameManager.");
+            return;
+        }
+
+        colorUnlockManager = gameManagerObject.GetComponent<ColorUnlockManager>();
         solidCollider = GetComponent<BoxCollider2D>();
         interactionZone = GetComponentInChildren<BarrierInteractionZone>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (manager == null)
+        if (colorUnlockManager == null)
         {
             Debug.LogError($"{name} could not find a ColorUnlockManager in the scene.");
         }
@@ -41,11 +49,11 @@ public class ColorBarrier : MonoBehaviour
 
     private void Start()
     {
-        if (manager == null) return;
+        if (colorUnlockManager == null) return;
 
-        manager.ColorUnlocked += HandleColorUnlocked;
+        colorUnlockManager.ColorUnlocked += HandleColorUnlocked;
 
-        if (manager.IsColorUnlocked(barrierColor))
+        if (colorUnlockManager.IsColorUnlocked(barrierColor))
         {
             OpenBarrier();
         }
@@ -53,15 +61,15 @@ public class ColorBarrier : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (manager != null)
+        if (colorUnlockManager != null)
         {
-            manager.ColorUnlocked -= HandleColorUnlocked;
+            colorUnlockManager.ColorUnlocked -= HandleColorUnlocked;
         }
     }
 
     public void Interact(PlayerInventory inventory)
     {
-        if (manager == null)
+        if (colorUnlockManager == null)
         {
             Debug.LogError($"{name} has no ColorUnlockManager reference.");
             return;
@@ -73,18 +81,10 @@ public class ColorBarrier : MonoBehaviour
             return;
         }
 
-        if (!manager.IsColorUnlocked(barrierColor))
+        if (!colorUnlockManager.IsColorUnlocked(barrierColor) && inventory.CheckKey(barrierColor) && colorUnlockManager.UnlockColor(barrierColor))
         {
-            if (inventory.CheckKey(barrierColor))
-            {
-                Debug.Log($"Player has the {barrierColor} key");
-                manager.UnlockColor(barrierColor);
-            }
-            else
-            {
-                Debug.Log($"The {barrierColor} barrier remains locked");
-            }
-        } 
+            inventory.ConsumeKey(barrierColor);
+        }
     }
 
     private void HandleColorUnlocked(KeyColor unlockedColor)

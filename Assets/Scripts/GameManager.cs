@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
         timer = GetComponent<GameTimer>();
         currentState = GameState.Playing;
 
@@ -27,15 +27,21 @@ public class GameManager : MonoBehaviour
         timer.TimerExpired += HandleExpiredTimer;
     }
 
+    private void OnDestroy()
+    {
+        if (timer != null)
+        {
+            timer.TimerExpired -= HandleExpiredTimer;
+        }   
+    }
+
     public void WinGame()
     {
         if (currentState == GameState.Playing)
         {
             currentState = GameState.Won;
-            timer.StopTimer();
             endUI.ShowWin();
-            playerMovement.StopPlayerMovement();
-            playerInteraction.StopPlayerInteraction();
+            StopGame();
         }
     }
 
@@ -44,11 +50,8 @@ public class GameManager : MonoBehaviour
         if (currentState == GameState.Playing)
         {
             currentState = GameState.Lost;
-            timer.StopTimer();
-            //Debug.Log("Game Over");
             endUI.ShowGameOver();
-            playerMovement.StopPlayerMovement();
-            playerInteraction.StopPlayerInteraction();
+            StopGame();
         }
     }
 
@@ -60,5 +63,17 @@ public class GameManager : MonoBehaviour
     private void HandleExpiredTimer()
     {
         LoseGame();
+    }
+
+    private void StopGame()
+    {
+        timer.StopTimer();
+        playerMovement.StopPlayerMovement();
+        playerInteraction.StopPlayerInteraction();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

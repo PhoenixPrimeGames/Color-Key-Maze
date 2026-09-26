@@ -17,11 +17,7 @@ public class ColorUnlockManager : MonoBehaviour
     // Checks if a barrier color is unlocked
     public bool IsColorUnlocked(KeyColor color)
     {
-        // Checks if a color is in the unlockedColors hash set
-        bool isUnlocked = unlockedColors.Contains(color);
-        Debug.Log($"Is {color} already unlocked? {isUnlocked}");
-
-        return isUnlocked;
+        return unlockedColors.Contains(color);
     }
 
     // This unlocks a barrier color
@@ -29,12 +25,10 @@ public class ColorUnlockManager : MonoBehaviour
     {
         // This attempts to add the color to the unlockedColors hash set
         bool unlocked = unlockedColors.Add(color);
-
         if (unlocked)
         {
-            ColorUnlocked?.Invoke(color);
-            Debug.Log($"Was {color} successfully unlocked? {unlocked}");
             timer.HalveRemainingTime();
+            ColorUnlocked?.Invoke(color);
         }
 
         return unlocked;

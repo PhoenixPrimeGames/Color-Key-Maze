@@ -42,7 +42,7 @@ public class PlayerInteraction : MonoBehaviour
             else selectedIndex = nearbyBarriers.Count - 1;
         }
 
-        return true;   
+        return true;
     }
 
     private void CycleSelection()
@@ -72,7 +72,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (keyboard == null) return;
 
-        if (keyboard.tabKey.wasPressedThisFrame) 
+        if (keyboard.tabKey.wasPressedThisFrame)
         {
             CycleSelection();
             if (selectedIndex != NULL_SELECTION)
@@ -80,7 +80,7 @@ public class PlayerInteraction : MonoBehaviour
                 Debug.Log($"Selected barrier: {nearbyBarriers[selectedIndex].name}");
             }
         }
-        if (keyboard.eKey.wasPressedThisFrame) 
+        if (keyboard.eKey.wasPressedThisFrame)
         {
             InteractWithSelection();
             //Debug.Log("Pressed E key"); 

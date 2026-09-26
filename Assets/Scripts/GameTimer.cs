@@ -24,7 +24,7 @@ public class GameTimer : MonoBehaviour
             {
                 StopTimer();
                 TimerExpired?.Invoke();
-                
+
             }
         }
     }

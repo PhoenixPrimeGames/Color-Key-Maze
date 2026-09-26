@@ -4,13 +4,21 @@ using UnityEngine;
 public class KeyPickup : MonoBehaviour
 {
     [SerializeField] private KeyColor keyColor;
-    private ColorUnlockManager manager;
+    GameObject gameManagerObject;
+    private ColorUnlockManager colorUnlockManager;
 
     private void Awake()
     {
-        manager = FindFirstObjectByType<ColorUnlockManager>();
+        gameManagerObject = GameObject.FindGameObjectWithTag("GameManager");
+        if (gameManagerObject == null)
+        {
+            Debug.LogError($"{name} could not find the GameManager.");
+            return;
+        }
 
-        if (manager == null)
+        colorUnlockManager = gameManagerObject.GetComponent<ColorUnlockManager>();
+
+        if (colorUnlockManager == null)
         {
             Debug.LogError($"{name} could not find a ColorUnlockManager in the scene.");
         }
@@ -18,11 +26,11 @@ public class KeyPickup : MonoBehaviour
 
     private void Start()
     {
-        if (manager == null) return;
+        if (colorUnlockManager == null) return;
 
-        manager.ColorUnlocked += HandleKeyColorUnlocked;
+        colorUnlockManager.ColorUnlocked += HandleKeyColorUnlocked;
 
-        if (manager.IsColorUnlocked(keyColor))
+        if (colorUnlockManager.IsColorUnlocked(keyColor))
         {
             Destroy(gameObject);
         }
@@ -30,23 +38,21 @@ public class KeyPickup : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (manager != null)
+        if (colorUnlockManager != null)
         {
-            manager.ColorUnlocked -= HandleKeyColorUnlocked;
+            colorUnlockManager.ColorUnlocked -= HandleKeyColorUnlocked;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Checks if the triggering object has access to the player inventory
+        if (!other.CompareTag("Player")) return;
         PlayerInventory inventory = other.GetComponent<PlayerInventory>();
-
-        // If it does, then we assume it's the player
         if (inventory == null)
         {
             return;
         }
-        
+
         inventory.CollectKey(keyColor);
         Destroy(gameObject);
         
