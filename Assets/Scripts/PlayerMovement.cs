@@ -34,10 +34,11 @@ public class PlayerMovement : MonoBehaviour
         vertical = ((keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed) ? -1 : 0) + ((keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed) ? 1 : 0);
 
         // Give horizonal movement priority over vertical movement
-        if (horizontal != 0) vertical = 0;
+        //if (horizontal != 0) vertical = 0;
 
 
         moveInput = new Vector2(horizontal, vertical);
+        
     }
 
     private void FixedUpdate()
