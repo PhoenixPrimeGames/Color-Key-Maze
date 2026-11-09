@@ -59,6 +59,17 @@ The movement system was updated to normalize diagonal input and support a serial
 
 Gameplay screenshots are in the screenshots folder. Captures include an overview of the maze and HUD, key/barrier interaction, unlocked barrier state, sprint indicator, and a completed run.
 
+![Maze overview](screenshots/maze-overview.jpg)
+
+![Key and barrier interaction](screenshots/key-barrier.jpg)
+
+![Color unlocked](screenshots/color-unlocked.jpg)
+
+![Sprinting indicator](screenshots/sprint-indicator.jpg)
+
+![Victory screen](screenshots/win-screen.jpg)
+
+
 ## Development process and AI assistance
 
 This is a personal learning project developed with AI assistance, including ChatGPT and Codex for programming guidance, troubleshooting, and code review. Implementation details were reviewed and gameplay behavior tested in Unity. During the documented sprint iteration, I implemented and tested changes to movement, persistent sprint state, event notifications, and the separate UI subscriber following design discussions and feedback.
